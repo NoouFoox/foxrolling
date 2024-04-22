@@ -19,7 +19,6 @@ const props = withDefaults(defineProps<{
 
 const content = ref<HTMLElement>()
 const firstOne = ref<typeof content.value>()
-const copyDom = ref<string>()
 const isRolling = ref<boolean>(false)
 const firstOneLength = ref<number>(0)
 const contentLength = ref<number>(0)
@@ -43,22 +42,13 @@ const getStyle = computed(() => {
     '--time': runTime + 's',
   }
 })
-const setCopy = ()=>{
-  if (firstOneLength.value > contentLength.value) 
-    copyDom.value = firstOne.value?.innerHTML
-}
 onMounted(() => {
   const contentDom = content.value
   const firstDom = firstOne.value
   const field = isDirectionRow(props.direction) ? "clientWidth" : 'clientHeight'
   contentLength.value = contentDom?.[field] || 0
   firstOneLength.value = firstDom?.[field] || 0
-  if (firstOneLength.value > contentLength.value) {
-    setCopy()
-    isRolling.value = true
-  } else {
-    isRolling.value = false
-  }
+  isRolling.value = firstOneLength.value > contentLength.value
 })
 
 </script>
@@ -66,9 +56,11 @@ onMounted(() => {
 <template>
   <div ref="content" class="roll-content" :style="getStyle">
     <div ref="firstOne" :class="getClass">
-      <slot />
+      <slot name="default" />
     </div>
-    <div v-html="copyDom" v-if="isRolling" :class="getClass" />
+    <div v-if="isRolling" :class="getClass" >
+      <slot name="default" />
+    </div>
   </div>
 </template>
 
