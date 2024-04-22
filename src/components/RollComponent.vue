@@ -1,16 +1,5 @@
 <script setup lang="ts">
-function debounce (fn:Function, delay = 200) {
-  let timer:number|undefined = undefined
-  return function () {
-    const args = arguments
-    const that: ThisType<Function> = this
-    clearTimeout(timer)
-    timer = setTimeout(function () {
-      fn.apply(that, args)
-    }, delay)
-  }
-}
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 type DirectionRow = 'row' | 'row-reverse'
 type DirectionColumn = 'column' | 'column-reverse'
@@ -58,7 +47,6 @@ const setCopy = ()=>{
   if (firstOneLength.value > contentLength.value) 
     copyDom.value = firstOne.value?.innerHTML
 }
-const obv = ref<MutationObserver>()
 onMounted(() => {
   const contentDom = content.value
   const firstDom = firstOne.value
@@ -71,18 +59,8 @@ onMounted(() => {
   } else {
     isRolling.value = false
   }
-  obv.value = new MutationObserver(() => {
-    debounce(setCopy,300)
-  })
-  obv.value.observe(firstOne.value as Node, {
-    childList: true,
-    subtree: true,
-    attributes: true
-  })
 })
-onUnmounted(() => {
-  obv.value?.disconnect()
-})
+
 </script>
 
 <template>
