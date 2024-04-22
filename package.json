@@ -1,13 +1,22 @@
 {
   "name": "foxrolling",
   "type": "module",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.0.1",
+  "private": false,
+  "main": "./dist/foxrolling.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
     "preview": "vite preview"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NoouFoox/foxrolling"
+  },
+  "homepage": "https://github.com/NoouFoox/foxrolling",
   "dependencies": {
     "vue": "^3.4.23"
   },
@@ -16,6 +25,7 @@
     "typescript": "^5.2.2",
     "unplugin-vue-components": "^0.26.0",
     "vite": "^5.2.0",
+    "vite-plugin-dts": "^3.8.3",
     "vue-tsc": "^2.0.6"
   }
 }
