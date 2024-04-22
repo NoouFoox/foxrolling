@@ -46,12 +46,12 @@ const getStyle = computed(() => {
 
 onMounted(() => {
   const contentDom = content.value
-  const firstOneDom = firstOne.value
+  const firstDom = firstOne.value
   const field = isDirectionRow(props.direction) ? "clientWidth" : 'clientHeight'
   contentLength.value = contentDom?.[field] || 0
-  firstOneLength.value = firstOneDom?.[field] || 0
+  firstOneLength.value = firstDom?.[field] || 0
   if (firstOneLength.value > contentLength.value) {
-    copyDom.value = firstOneDom?.innerHTML
+    copyDom.value = firstDom?.innerHTML
     isRolling.value = true
   } else {
     isRolling.value = false
