@@ -37,12 +37,14 @@ const display = useDisplay('.container', '.main')
 onMounted(() => {
   display.load()
 })
+const testValue = ref("")
 </script>
 
 <template>
   <div class="container">
     <div class="main">
       <input type="number" :value="speed" @input="changeSpeed">
+      <input v-model="testValue">
       <div class="content">
         <RollComponent :speed="speed">
           <div v-for="li in list" :key="li.key">
@@ -61,7 +63,7 @@ onMounted(() => {
         <RollComponent :speed="speed" direction="row">
           <div>
             <div v-for="li in list2" :key="li.key" style="width: 50px">
-              {{ li.name }}-{{ li.title }}
+              {{ li.name }}-{{ li.title }}{{ testValue }}
             </div>
           </div>
         </RollComponent>

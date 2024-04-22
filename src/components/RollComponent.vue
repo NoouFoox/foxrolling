@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 type DirectionRow = 'row' | 'row-reverse'
 type DirectionColumn = 'column' | 'column-reverse'
@@ -43,7 +43,7 @@ const getStyle = computed(() => {
     '--time': runTime + 's',
   }
 })
-
+const obv = ref<MutationObserver>()
 onMounted(() => {
   const contentDom = content.value
   const firstDom = firstOne.value
@@ -56,6 +56,17 @@ onMounted(() => {
   } else {
     isRolling.value = false
   }
+  obv.value = new MutationObserver(() => {
+    if (firstOneLength.value > contentLength.value)
+    copyDom.value = firstDom?.innerHTML
+  })
+  obv.value.observe(firstOne.value as Node, {
+    childList: true,
+    subtree: true
+  })
+})
+onUnmounted(() => {
+  obv.value?.disconnect()
 })
 </script>
 
