@@ -27,13 +27,12 @@ const contentLength = ref<number>(0)
 
 const getReverse = computed(() => props.direction.includes('reverse'))
 const getClass = computed(() => {
+  const classList = ['roll']
   if (isRolling.value) {
-    if (isDirectionRow(props.direction)) {
-      return getReverse.value ? 'roll-play-x reverse' : 'roll-play-x'
-    }
-    return getReverse.value ? 'roll-play-y reverse' : 'roll-play-y'
+    classList.push(isDirectionRow(props.direction) ? 'roll-play-x' : 'roll-play-y')
+    if (getReverse.value) classList.push('reverse')
   }
-  return ''
+  return classList.join(' ')
 })
 
 const getStyle = computed(() => {
@@ -63,7 +62,7 @@ onMounted(() => {
 <template>
   <div ref="content" class="roll-content" :style="getStyle">
     <div ref="firstOne" :class="getClass">
-      <slot/>
+      <slot />
     </div>
     <div v-html="copyDom" v-if="isRolling" :class="getClass" />
   </div>
@@ -84,9 +83,11 @@ onMounted(() => {
 .roll-play-x {
   animation: roll-x var(--time) linear forwards infinite;
 }
-.reverse{
+
+.reverse {
   animation-direction: reverse;
 }
+
 @keyframes roll-y {
   from {
     transform: translateY(0%);
