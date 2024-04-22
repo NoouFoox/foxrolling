@@ -74,6 +74,7 @@ onMounted(() => {
   overflow: hidden;
   height: 100%;
   width: 100%;
+  white-space: nowrap;
 }
 
 .roll-play-y {
