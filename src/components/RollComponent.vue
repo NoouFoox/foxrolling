@@ -1,5 +1,15 @@
 <script setup lang="ts">
-import debounce from "lodash.debounce"
+function debounce (fn:Function, delay = 200) {
+  let timer:number|undefined = undefined
+  return function () {
+    const args = arguments
+    const that: ThisType<Function> = this
+    clearTimeout(timer)
+    timer = setTimeout(function () {
+      fn.apply(that, args)
+    }, delay)
+  }
+}
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 type DirectionRow = 'row' | 'row-reverse'
