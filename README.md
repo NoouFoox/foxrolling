@@ -1,9 +1,30 @@
-# Vue 3 + TypeScript + Vite
+# Vue 3 无缝滚动插件
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## Installation 
 
-## Recommended Setup
+```bash
+# npm
+npm install foxrolling
 
-- [VS Code](https://code.visualstudio.com/) + [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (previously Volar) and disable Vetur
+# yarn
+yarn add foxrolling
 
-- Use [vue-tsc](https://github.com/vuejs/language-tools/tree/master/packages/tsc) for performing the same type checking from the command line, or for generating d.ts files for SFCs.
+# pnpm
+pnpm install foxrolling
+```
+## Usage
+
+```typescript
+// main.ts or main.js
+import foxrolling from "foxrolling"
+app.use(foxrolling)
+// or
+import { RollComponent } from 'foxrolling';
+app.component('RollComponent', RollComponent);
+```
+
+## Options
+
+* speed (速度) 默认 1, number
+
+* direction (滚动方向) 默认 "column" , 'row' | 'row-reverse' | 'column' | 'column-reverse'
