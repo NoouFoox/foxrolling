@@ -28,3 +28,5 @@ app.component('RollComponent', RollComponent);
 * speed (速度) 默认 1, number
 
 * direction (滚动方向) 默认 "column" , 'row' | 'row-reverse' | 'column' | 'column-reverse'
+
+* hoverStop (是否启用鼠标悬停) 默认 false, boolen

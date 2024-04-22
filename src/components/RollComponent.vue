@@ -11,10 +11,12 @@ const isDirectionRow = (direction: Direction): direction is DirectionRow => {
 
 const props = withDefaults(defineProps<{
   speed?: number,
-  direction?: Direction
+  direction?: Direction,
+  hoverStop?: boolean
 }>(), {
   speed: 1,
-  direction: "column"
+  direction: "column",
+  hoverStop: false
 })
 
 const content = ref<HTMLElement>()
@@ -31,6 +33,9 @@ const getClass = computed(() => {
     classList.push(isDirectionRow(props.direction) ? 'roll-play-x' : 'roll-play-y')
     if (getReverse.value) classList.push('reverse')
   }
+  if (props.hoverStop) {
+    classList.push('hover-paused')
+  }
   return classList.join(' ')
 })
 
@@ -38,9 +43,13 @@ const getStyle = computed(() => {
   const cardinal = 0.1
   const speedCardinal = cardinal / props.speed
   const runTime = firstOneLength.value * speedCardinal
-  return {
+  const style: { '--time': string, display?: 'flex' } = {
     '--time': runTime + 's',
   }
+  if (isDirectionRow(props.direction)) {
+    style.display = 'flex'
+  }
+  return style
 })
 onMounted(() => {
   const contentDom = content.value
@@ -58,7 +67,7 @@ onMounted(() => {
     <div ref="firstOne" :class="getClass">
       <slot name="default" />
     </div>
-    <div v-if="isRolling" :class="getClass" >
+    <div v-if="isRolling" :class="getClass">
       <slot name="default" />
     </div>
   </div>
@@ -102,5 +111,9 @@ onMounted(() => {
   to {
     transform: translateX(-100%);
   }
+}
+
+.roll-content:hover .hover-paused{
+  animation-play-state: paused;
 }
 </style>

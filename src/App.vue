@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref,onUnmounted } from 'vue';
 import RollComponent from './components/RollComponent.vue';
 import useDisplay from './utils/useDisplay';
 
@@ -30,12 +30,17 @@ list2.value = new Array(200)
 const speed = ref(1)
 const changeSpeed = (event: Event) => {
   const value = (<HTMLInputElement>event.target)?.value
-  speed.value = Number(value) || 1
+  speed.value = Number(value)
 }
 
 const display = useDisplay('.container', '.main')
 onMounted(() => {
-  display.load()
+  console.log('大屏模式',display);
+  
+  // display.load()
+})
+onUnmounted(()=>{
+  // display.unload()
 })
 const testValue = ref("")
 </script>
@@ -43,7 +48,8 @@ const testValue = ref("")
 <template>
   <div class="container">
     <div class="main">
-      <input type="number" :value="speed" @input="changeSpeed">
+      <input type="number" min="0" max="10000" :value="speed" @input="changeSpeed">
+      <br>
       <input v-model="testValue">
       <div class="content">
         <RollComponent :speed="speed">
@@ -53,7 +59,7 @@ const testValue = ref("")
         </RollComponent>
       </div>
       <div class="content">
-        <RollComponent :speed="speed" direction="column">
+        <RollComponent :hoverStop="true" :speed="speed" direction="column">
           <div v-for="li in list2" :key="li.key">
             {{ li.name }}-{{ li.title }}
           </div>
@@ -61,17 +67,19 @@ const testValue = ref("")
       </div>
       <div class="content">
         <RollComponent :speed="speed" direction="row">
-          <div>
-            <div v-for="li in list2" :key="li.key" style="width: 50px">
-              {{ li.name }}-{{ li.title }}{{ testValue }}
+          <div style="display: flex;">
+            <div v-for="li in list" :key="li.key">
+              {{ li.name }}{{ testValue }}
             </div>
           </div>
         </RollComponent>
       </div>
       <div class="content">
-        <RollComponent :speed="speed" direction="row-reverse">
-          <div v-for="li in list2" :key="li.key">
-            {{ li.name }}-{{ li.title }}
+        <RollComponent :speed="speed" direction="row-reverse" :hoverStop="true">
+          <div style="display: flex;">
+            <div v-for="li in list2" :key="li.key">
+              {{ li.name }}-{{ li.title }}
+            </div>
           </div>
         </RollComponent>
       </div>
