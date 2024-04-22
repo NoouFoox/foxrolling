@@ -15,9 +15,11 @@
   },
   "homepage": "https://github.com/NoouFoox/foxrolling",
   "dependencies": {
+    "lodash.debounce": "^4.0.8",
     "vue": "^3.4.23"
   },
   "devDependencies": {
+    "@types/lodash.debounce": "^4.0.9",
     "@vitejs/plugin-vue": "^5.0.4",
     "typescript": "^5.2.2",
     "unplugin-vue-components": "^0.26.0",

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import debounce from "lodash.debounce"
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 type DirectionRow = 'row' | 'row-reverse'
@@ -43,6 +44,10 @@ const getStyle = computed(() => {
     '--time': runTime + 's',
   }
 })
+const setCopy = ()=>{
+  if (firstOneLength.value > contentLength.value) 
+    copyDom.value = firstOne.value?.innerHTML
+}
 const obv = ref<MutationObserver>()
 onMounted(() => {
   const contentDom = content.value
@@ -51,18 +56,18 @@ onMounted(() => {
   contentLength.value = contentDom?.[field] || 0
   firstOneLength.value = firstDom?.[field] || 0
   if (firstOneLength.value > contentLength.value) {
-    copyDom.value = firstDom?.innerHTML
+    setCopy()
     isRolling.value = true
   } else {
     isRolling.value = false
   }
   obv.value = new MutationObserver(() => {
-    if (firstOneLength.value > contentLength.value)
-    copyDom.value = firstDom?.innerHTML
+    debounce(setCopy,300)
   })
   obv.value.observe(firstOne.value as Node, {
     childList: true,
-    subtree: true
+    subtree: true,
+    attributes: true
   })
 })
 onUnmounted(() => {
