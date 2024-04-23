@@ -77,7 +77,9 @@ onMounted(() => {
   })
 })
 
-onUnmounted(obv.value.disconnect)
+onUnmounted(()=>{
+  obv.value?.disconnect()
+})
 </script>
 
 <template>
