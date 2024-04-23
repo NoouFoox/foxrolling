@@ -1,13 +1,9 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 type DirectionRow = 'row' | 'row-reverse'
 type DirectionColumn = 'column' | 'column-reverse'
 type Direction = DirectionRow | DirectionColumn
-
-const isDirectionRow = (direction: Direction): direction is DirectionRow => {
-  return direction === 'row' || direction === 'row-reverse';
-}
 
 const props = withDefaults(defineProps<{
   speed?: number,
@@ -19,47 +15,69 @@ const props = withDefaults(defineProps<{
   hoverStop: false
 })
 
+const isDirectionRow = (): boolean => props.direction === 'row' || props.direction === 'row-reverse'
+
 const content = ref<HTMLElement>()
 const firstOne = ref<typeof content.value>()
 const isRolling = ref<boolean>(false)
 const firstOneLength = ref<number>(0)
 const contentLength = ref<number>(0)
 
-
 const getReverse = computed(() => props.direction.includes('reverse'))
+
 const getClass = computed(() => {
+  if (!isRolling.value) return ''
   const classList = ['roll']
-  if (isRolling.value) {
-    classList.push(isDirectionRow(props.direction) ? 'roll-play-x' : 'roll-play-y')
-    if (getReverse.value) classList.push('reverse')
-  }
-  if (props.hoverStop) {
-    classList.push('hover-paused')
-  }
+  classList.push(isDirectionRow() ? 'roll-play-x' : 'roll-play-y')
+  if (getReverse.value) classList.push('reverse')
+  if (props.hoverStop) classList.push('hover-paused')
   return classList.join(' ')
 })
 
-const getStyle = computed(() => {
-  const cardinal = 0.1
-  const speedCardinal = cardinal / props.speed
-  const runTime = firstOneLength.value * speedCardinal
-  const style: { '--time': string, display?: 'flex' } = {
-    '--time': runTime + 's',
-  }
-  if (isDirectionRow(props.direction)) {
-    style.display = 'flex'
-  }
-  return style
-})
-onMounted(() => {
+const runTime = ref(0)
+
+const setLength = () => {
   const contentDom = content.value
   const firstDom = firstOne.value
-  const field = isDirectionRow(props.direction) ? "clientWidth" : 'clientHeight'
+  const field = isDirectionRow() ? "clientWidth" : 'clientHeight'
   contentLength.value = contentDom?.[field] || 0
   firstOneLength.value = firstDom?.[field] || 0
-  isRolling.value = firstOneLength.value > contentLength.value
+  return { firstOneLength, contentLength }
+}
+
+const setTime = () => {
+  if (!isRolling.value) return 0
+  setLength()
+  const cardinal = 0.1
+  const speedCardinal = cardinal / props.speed
+  runTime.value = firstOneLength.value * speedCardinal
+}
+
+const getStyle = computed(() => {
+  setTime()
+  const style: { '--time': string, } = {
+    '--time': runTime.value + 's',
+  }
+  return isDirectionRow()
+    ? {
+      ...style,
+      display: 'flex'
+    } : style
 })
 
+const obv = ref<MutationObserver>(new MutationObserver(setTime))
+
+onMounted(() => {
+  const { firstOneLength, contentLength } = setLength()
+  isRolling.value = firstOneLength.value > contentLength.value
+  obv.value.observe(<Node>firstOne.value, {
+    subtree: true,
+    attributes: true,
+    childList: true
+  })
+})
+
+onUnmounted(obv.value.disconnect)
 </script>
 
 <template>
@@ -113,7 +131,7 @@ onMounted(() => {
   }
 }
 
-.roll-content:hover .hover-paused{
+.roll-content:hover .hover-paused {
   animation-play-state: paused;
 }
 </style>
