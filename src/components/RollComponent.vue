@@ -46,8 +46,9 @@ const setLength = () => {
 }
 
 const setTime = () => {
+  const { firstOneLength, contentLength } = setLength()
+  isRolling.value = firstOneLength.value > contentLength.value
   if (!isRolling.value) return 0
-  setLength()
   const cardinal = 0.1
   const speedCardinal = cardinal / props.speed
   runTime.value = firstOneLength.value * speedCardinal
